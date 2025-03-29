@@ -159,10 +159,10 @@ const AdminAddProduct = () => {
 
         </div>
 
-        {/* <div className="mb-3">
+         <div className="mb-3">
           <label className="form-label">Upload Image</label>
           <input type="file" className="form-control" accept="image/*" onChange={handleImageChange} required />
-        </div> */}
+        </div> 
 
         <div className="d-flex justify-content-between mt-4">
           <Link to="/AdminProductList" className="btn btn-secondary px-4 py-2">Cancel</Link>

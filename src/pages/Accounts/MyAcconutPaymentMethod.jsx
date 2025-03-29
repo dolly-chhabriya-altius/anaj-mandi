@@ -101,10 +101,10 @@ const MyAcconutPaymentMethod = () => {
                       <li className="nav-item">
                       <Link 
     className="nav-link" 
-    to="/Grocery-react/" 
+    to="/" 
     onClick={() => {
-      localStorage.removeItem("userId"); // ✅ Remove user ID
-      window.location.reload(); // ✅ Refresh page to reflect logout
+      localStorage.removeItem("userId"); 
+      window.location.reload();
     }}
   >
     <i className="fas fa-sign-out-alt me-2" />
@@ -118,7 +118,7 @@ const MyAcconutPaymentMethod = () => {
                   <div>
                     {loaderStatus ? (
                       <div className="loader-container">
-                        {/* <PulseLoader loading={loaderStatus} size={50} color="#0aad0a" /> */}
+                    
                         <MagnifyingGlass
                           visible={true}
                           height="100"
@@ -375,7 +375,7 @@ const MyAcconutPaymentMethod = () => {
                 <ul className="nav flex-column nav-pills nav-pills-dark">
                   {/* nav item */}
                   <li className="nav-item">
-                    <a className="nav-link " href="/Grocery-react/">
+                    <a className="nav-link " href="/">
                       <i className="fas fa-sign-out-alt me-2" />
                       Log out
                     </a>

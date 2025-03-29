@@ -16,22 +16,18 @@ const ShopWishList = () => {
       try {
         let apiWishlist = [];
         if (userId) {
-          // Fetch wishlist from API if user is logged in
           const wishlistResponse = await axios.get(
             `http://3.23.76.252:8080/api/wishlisht/${userId}`
           );
           apiWishlist = wishlistResponse.data;
         }
 
-        // Fetch wishlist from localStorage for non-logged-in users
         let localWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
-        // Combine both wishlists
         const combinedWishlist = [...apiWishlist, ...localWishlist];
 
         setWishlist(combinedWishlist);
 
-        // Fetch product details for all wishlist items
+        // Fetch product details
         const productPromises = combinedWishlist.map((item) =>
           axios.get(`http://3.23.76.252:8080/api/productById/${item.productId}`)
         );
@@ -50,26 +46,49 @@ const ShopWishList = () => {
     fetchWishlist();
   }, []);
 
-  const handleRemoveFromWishlist = (wishlistId, productId) => {
+  // ✅ Function to call the remove API
+  const handleRemoveFromWishlist = async (productId) => {
     const userId = localStorage.getItem("userId");
 
     if (userId) {
-      // Remove from API wishlist
-      axios
-        .delete(`http://3.23.76.252:8080/api/wishlisht/${wishlistId}`)
-        .then(() => {
-          setWishlist((prev) => prev.filter((item) => item.wishlistId !== wishlistId));
-          setProducts((prev) => prev.filter((prod) => prod.productId !== productId));
-        })
-        .catch((error) => console.error("Error removing from wishlist:", error));
+      try {
+        await axios.put(`http://3.23.76.252:8080/api/removeFromWishList/${productId}/${userId}`);
+
+        // Temporarily remove item from the UI
+        setWishlist((prev) => prev.filter((item) => item.productId !== productId));
+        setProducts((prev) => prev.filter((product) => product.productId !== productId));
+
+      } catch (error) {
+        console.error("Error removing from wishlist:", error);
+      }
     } else {
-      // Remove from localStorage wishlist
+      // Remove from localStorage if user is not logged in
       let localWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
       localWishlist = localWishlist.filter((item) => item.productId !== productId);
       localStorage.setItem("wishlist", JSON.stringify(localWishlist));
 
       setWishlist(localWishlist);
-      setProducts((prev) => prev.filter((prod) => prod.productId !== productId));
+      setProducts((prev) => prev.filter((product) => product.productId !== productId));
+    }
+  };
+
+  // ✅ Function to call the remove and add to cart API
+  const handleRemoveFromWishlistAndAddToCart = async (productId) => {
+    const userId = localStorage.getItem("userId");
+
+    if (userId) {
+      try {
+        await axios.put(`http://3.23.76.252:8080/api/removeFromWishListAndAddToCart/${productId}/${userId}`);
+
+        // Temporarily remove item from the UI
+        setWishlist((prev) => prev.filter((item) => item.productId !== productId));
+        setProducts((prev) => prev.filter((product) => product.productId !== productId));
+
+      } catch (error) {
+        console.error("Error removing from wishlist and adding to cart:", error);
+      }
+    } else {
+      console.warn("User not logged in. Cannot add to cart.");
     }
   };
 
@@ -112,24 +131,22 @@ const ShopWishList = () => {
                         {products.length > 0 ? (
                           products.map((product, index) => (
                             <tr key={product.productId}>
-                           <td className="align-middle d-flex align-items-center">
-  <Link to="#">
-    <img
-      src={`http://3.23.76.252:8080/api/images?imagePath=${encodeURIComponent(product.imagePath)}`}
-      className="img-fluid icon-shape icon-xxl me-3"
-      alt={product.productName}
-      style={{ width: "80px", height: "80px", objectFit: "cover" }}
-    />
-  </Link>
-  <div>
-    <h5 className="fs-6 mb-0">
-      <Link to="#" className="text-inherit">
-        {product.productName}
-      </Link>
-    </h5>
-  </div>
-
-
+                              <td className="align-middle d-flex align-items-center">
+                                <Link to="#">
+                                  <img
+                                    src={`http://3.23.76.252:8080/api/images?imagePath=${encodeURIComponent(product.imagePath)}`}
+                                    className="img-fluid icon-shape icon-xxl me-3"
+                                    alt={product.productName}
+                                    style={{ width: "80px", height: "80px", objectFit: "cover" }}
+                                  />
+                                </Link>
+                                <div>
+                                  <h5 className="fs-6 mb-0">
+                                    <Link to="#" className="text-inherit">
+                                      {product.productName}
+                                    </Link>
+                                  </h5>
+                                </div>
                               </td>
                               <td className="align-middle">₹{product.productPrice}</td>
                               <td className="align-middle">
@@ -138,14 +155,17 @@ const ShopWishList = () => {
                                 </span>
                               </td>
                               <td className="align-middle">
-                                <button className="btn btn-primary btn-sm">Add to Cart</button>
+                                <button
+                                  className="btn btn-primary btn-sm"
+                                  onClick={() => handleRemoveFromWishlistAndAddToCart(product.productId)}
+                                >
+                                  Add to Cart
+                                </button>
                               </td>
                               <td className="align-middle text-center">
                                 <button
                                   className="btn btn-danger btn-sm"
-                                  onClick={() =>
-                                    handleRemoveFromWishlist(wishlist[index]?.wishlistId, product.productId)
-                                  }
+                                  onClick={() => handleRemoveFromWishlist(product.productId)}
                                 >
                                   <i className="fas fa-trash-alt"></i>
                                 </button>

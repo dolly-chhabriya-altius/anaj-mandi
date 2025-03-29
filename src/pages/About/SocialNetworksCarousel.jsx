@@ -2,9 +2,7 @@ import React from "react";
 import { Slide, Zoom } from "react-awesome-reveal";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-// import SwiperCore, { Pagination } from 'swiper/core';
-// import 'swiper/swiper.min.css';
-// import 'swiper/components/pagination/pagination.min.css';
+
 
 const SocialNetworksCarousel = () => {
   return (

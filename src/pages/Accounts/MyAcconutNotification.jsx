@@ -97,7 +97,7 @@ const MyAcconutNotification = () => {
                     <li className="nav-item">
                     <Link 
     className="nav-link" 
-    to="/Grocery-react/" 
+    to="/" 
     onClick={() => {
       localStorage.removeItem("userId"); // ✅ Remove user ID
       window.location.reload(); // ✅ Refresh page to reflect logout
@@ -399,7 +399,7 @@ const MyAcconutNotification = () => {
               <ul className="nav flex-column nav-pills nav-pills-dark">
                 {/* nav item */}
                 <li className="nav-item">
-                  <a className="nav-link " href="/Grocery-react/">
+                  <a className="nav-link " href="/">
                     <i className="fas fa-sign-out-alt me-2" />
                     Log out
                   </a>

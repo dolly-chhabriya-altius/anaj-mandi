@@ -3,7 +3,7 @@ import clutch from "../../images/clutch-dark.png";
 import member1 from "../../images/01.jpg";
 import member2 from "../../images/02.jpg";
 import member3 from "../../images/03.jpg";
-// import member4 from "../../images/04.jpg";
+
 import member5 from "../../images/member5.jpg";
 import member6 from "../../images/member6.jpg";
 import member7 from "../../images/member7.jpg";
@@ -11,15 +11,10 @@ import member8 from "../../images/member8.jpg";
 import idea from "../../images/idea.gif";
 import team from "../../images/team.gif";
 import award from "../../images/award.gif";
-
 import flipkartlogo from "../../images/flipkartlogo.png";
 import amazonlogo from "../../images/amazonlogo.png";
 import blinkit from "../../images/blinkit.png";
 import smartshop from "../../images/smartshop.png";
-
-// import bgimage from "../../images/contact-bg.png";
-// import cover from "../../images/cover.jpg";
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Link } from "react-router-dom";
 import SocialNetworksCarousel from "./SocialNetworksCarousel";
@@ -29,7 +24,6 @@ import { Slide, Zoom } from "react-awesome-reveal";
 import ScrollToTop from "../ScrollToTop";
 
 const AboutUs = () => {
-  // loading
   const [loaderStatus, setLoaderStatus] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -42,7 +36,7 @@ const AboutUs = () => {
       <div>
         {loaderStatus ? (
           <div className="loader-container">
-            {/* <PulseLoader loading={loaderStatus} size={50} color="#0aad0a" /> */}
+            
             <MagnifyingGlass
               visible={true}
               height="100"
@@ -135,11 +129,7 @@ const AboutUs = () => {
                             alt="member"
                           />
                           </Zoom>
-                          {/* <img
-                      src={member2}
-                      className="d-block rounded-3"
-                     alt="member"
-                    /> */}
+                        
                         </div>
                         <div className="col">
                           <Zoom>
@@ -149,11 +139,7 @@ const AboutUs = () => {
                             alt="member"
                           />
                           </Zoom>
-                          {/* <img
-                      src={member4}
-                      className="d-block rounded-3"
-                     alt="member"
-                    /> */}
+                         
                         </div>
                       </div>
                     </div>
@@ -166,7 +152,7 @@ const AboutUs = () => {
               <section className="container mt-8 mb-5 pt-lg-5" id="benefits">
                 <Swiper
                   className="swiper pt-3"
-                  modules={[]} // Use the modules prop to include the Pagination module
+                  modules={[]} 
                   slidesPerView={1}
                   pagination={{ clickable: true }}
                   breakpoints={{
@@ -239,26 +225,7 @@ const AboutUs = () => {
             </>
 
             <>
-              {/* Video showreel */}
-              {/* <section className="container text-center pb-5 mt-n2 mt-md-0 mb-md-2 mb-lg-4">
-          <div className="position-relative rounded-3 overflow-hidden">
-            <div className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center zindex-5">
-              <a
-                href="https://www.youtube.com/watch?v=zPo5ZaH6sW8"
-                className="btn btn-video btn-icon btn-xl stretched-link bg-white"
-                data-bs-toggle="video"
-              >
-                <i className="bx bx-play" />
-              </a>
-            </div>
-            <span className="position-absolute top-0 start-0 w-100 h-100  opacity-35" />
-            <img
-              src={cover}
-              className="d-block w-100"
-              alt="Cover "
-            />
-          </div>
-        </section> */}
+           
               {/* Gallery */}
               <section className="container pb-5 mb-2 mb-md-4 mb-lg-5 mt-8">
                 <div className="d-flex align-items-center justify-content-between pb-4 mb-2">
@@ -514,31 +481,7 @@ const AboutUs = () => {
                        
                     </form>
                   </div>
-                  {/* Pattern */}
-                  {/* <div className="position-absolute end-0 bottom-0 text-primary">
-              <svg
-                width={416}
-                height={444}
-                viewBox="0 0 416 444"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  opacity="0.08"
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M240.875 615.746C389.471 695.311 562.783 640.474 631.69 504.818C700.597 369.163 645.201 191.864 496.604 112.299C348.007 32.7335 174.696 87.5709 105.789 223.227C36.8815 358.882 92.278 536.18 240.875 615.746ZM208.043 680.381C388.035 776.757 605.894 713.247 694.644 538.527C783.394 363.807 709.428 144.04 529.436 47.6636C349.443 -48.7125 131.584 14.7978 42.8343 189.518C-45.916 364.238 28.0504 584.005 208.043 680.381Z"
-                  fill="currentColor"
-                />
-                <path
-                  opacity="0.08"
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M262.68 572.818C382.909 637.194 526.686 594.13 584.805 479.713C642.924 365.295 595.028 219.601 474.799 155.224C354.57 90.8479 210.793 133.912 152.674 248.33C94.5545 362.747 142.45 508.442 262.68 572.818ZM253.924 590.054C382.526 658.913 538.182 613.536 601.593 488.702C665.004 363.867 612.156 206.847 483.554 137.988C354.953 69.129 199.296 114.506 135.886 239.341C72.4752 364.175 125.323 521.195 253.924 590.054Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div> */}
+                 
                 </div>
               </section>
             </>

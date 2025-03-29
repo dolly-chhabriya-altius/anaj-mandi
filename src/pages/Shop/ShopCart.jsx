@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { MagnifyingGlass } from "react-loader-spinner";
 import axios from "axios";
 
@@ -13,14 +12,14 @@ const ShopCart = () => {
       try {
         const userId = localStorage.getItem("userId");
         let cartData = [];
-        
+
         if (userId) {
           const cartRes = await axios.get(`http://3.23.76.252:8080/api/cart/${userId}`);
           cartData = cartRes.data;
         } else {
           cartData = JSON.parse(localStorage.getItem("cart")) || [];
         }
-        
+
         if (cartData.length > 0) {
           setCartItems(cartData);
           const productRequests = cartData.map((item) =>
@@ -39,25 +38,44 @@ const ShopCart = () => {
     fetchCartItems();
   }, []);
 
-  const removeItem = (productId) => {
+  // Function to call the API to update cart quantity
+  const updateCartQuantity = async (productId, newQuantity) => {
     const userId = localStorage.getItem("userId");
-    
     if (userId) {
-      console.log(`Removing product with ID: ${productId} from API`);
-      // Call API to remove item for logged-in user
-    } else {
-      let storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      storedCart = storedCart.filter(item => item.productId !== productId);
-      localStorage.setItem("cart", JSON.stringify(storedCart));
-      setCartItems(storedCart);
-      setProducts(products.filter(product => product.productId !== productId));
+      try {
+        await axios.put(`http://3.23.76.252:8080/api/updateCartQty/${productId}/${newQuantity}/${userId}`);
+      } catch (error) {
+        console.error("Error updating cart quantity:", error);
+      }
     }
   };
 
+  // Function to handle + and - clicks
+  const handleQuantityChange = (productId, delta) => {
+    const updatedCartItems = cartItems
+      .map((item) => {
+        if (item.productId === productId) {
+          const newQuantity = item.quantity + delta;
+
+          // Remove the item from local state if quantity reaches 0
+          if (newQuantity <= 0) {
+            updateCartQuantity(productId, 0);  // API call with 0
+            return null;  // Temporarily remove the item from the UI
+          } else {
+            updateCartQuantity(productId, newQuantity);  // API call with new quantity
+            return { ...item, quantity: newQuantity };
+          }
+        }
+        return item;
+      })
+      .filter((item) => item !== null);  // Remove null entries (quantity = 0)
+
+    setCartItems(updatedCartItems);
+  };
 
   const calculateTotal = () => {
     return products.reduce((sum, product) => {
-      const cartItem = cartItems.find(item => item.productId === product.productId);
+      const cartItem = cartItems.find((item) => item.productId === product.productId);
       return sum + (product.productPrice * (cartItem ? cartItem.quantity : 1));
     }, 0);
   };
@@ -78,27 +96,52 @@ const ShopCart = () => {
               {products.length > 0 ? (
                 <ul className="list-group list-group-flush">
                   {products.map((product, index) => {
-                    const cartItem = cartItems.find(item => item.productId === product.productId);
+                    const cartItem = cartItems.find((item) => item.productId === product.productId);
+
+                    if (!cartItem) return null;  // Skip if removed
+
                     return (
                       <li key={index} className="list-group-item d-flex align-items-center py-3 border rounded mb-3" style={{ borderRadius: "10px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
-                        <img src={`http://3.23.76.252:8080/api/images?imagePath=${encodeURIComponent(product.imagePath)}`} alt={product.productName} className="img-fluid rounded me-3" style={{ width: "80px", height: "80px", objectFit: "cover" }} />
+                        <img
+                          src={`http://3.23.76.252:8080/api/images?imagePath=${encodeURIComponent(product.imagePath)}`}
+                          alt={product.productName}
+                          className="img-fluid rounded me-3"
+                          style={{ width: "80px", height: "80px", objectFit: "cover" }}
+                        />
                         <div className="flex-grow-1">
                           <h6 className="mb-1" style={{ color: "#34495e" }}>{product.productName}</h6>
                           <span className="text-muted">{cartItem.quantity} pcs</span>
                         </div>
                         <div className="d-flex align-items-center">
-                          <button className="btn btn-outline-secondary btn-sm" style={{ borderRadius: "5px" }}>-</button>
-                          <input type="text" value={cartItem.quantity} className="form-control text-center mx-2" style={{ width: "40px", borderRadius: "5px" }} readOnly />
-                          <button className="btn btn-outline-secondary btn-sm" style={{ borderRadius: "5px" }}>+</button>
+                          <button
+                            className="btn btn-outline-secondary btn-sm"
+                            style={{ borderRadius: "5px" }}
+                            onClick={() => handleQuantityChange(product.productId, -1)}
+                          >
+                            -
+                          </button>
+                          <input
+                            type="text"
+                            value={cartItem.quantity}
+                            className="form-control text-center mx-2"
+                            style={{ width: "40px", borderRadius: "5px" }}
+                            readOnly
+                          />
+                          <button
+                            className="btn btn-outline-secondary btn-sm"
+                            style={{ borderRadius: "5px" }}
+                            onClick={() => handleQuantityChange(product.productId, 1)}
+                          >
+                            +
+                          </button>
                         </div>
                         <div className="ms-3 text-end">
                           <span className="fw-bold" style={{ color: "#27ae60" }}>₹{product.productPrice}</span>
                           {product.productDiscountPercent > 0 && (
-                            <div className="text-muted text-decoration-line-through small">₹{(product.productPrice / (1 - product.productDiscountPercent / 100)).toFixed(2)}</div>
+                            <div className="text-muted text-decoration-line-through small">
+                              ₹{(product.productPrice / (1 - product.productDiscountPercent / 100)).toFixed(2)}
+                            </div>
                           )}
-                          {/* <button className="btn btn-link text-danger d-block mt-2" onClick={() => removeItem(cartItem.productId)} style={{ textDecoration: "none" }}>
-                            <i className="feather-trash-2"></i> Remove
-                          </button> */}
                         </div>
                       </li>
                     );

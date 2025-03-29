@@ -1,16 +1,6 @@
-// import React from "react";
 import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-// import groceryshop from "../images/Grocerylogo.png";
-// import amazonpay from "../images/amazonpay.svg";
-// import american from "../images/american-express.svg";
-// import mastercard from "../images/mastercard.svg";
-// import paypal from "../images/paypal.svg";
-// import visa from "../images/visa.svg";
 import React, { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-
-
 
 const Footer = () => {
   const [categories, setCategories] = useState([]);
